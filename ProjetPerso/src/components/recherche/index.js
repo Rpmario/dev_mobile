@@ -142,7 +142,7 @@ const StyledScrollView= styled.ScrollView`
 `;
 
 const StyledView3= styled.View`
-  margin: 0px 5px 30px 0px;
+  margin: 70px 5px 30px 0px;
   background-color: rgba(135, 206, 235, 0.5);
   padding: 10px 20px;
   border-radius: 25px;

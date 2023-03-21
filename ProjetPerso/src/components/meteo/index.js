@@ -1,28 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text } from 'react-native';
 import axios from 'axios';
 import Header from '../header';
+import MenuButton from '../menu';
 import styled from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
 import { ImageBackground } from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
-Geolocation.getCurrentPosition(
-  position => {
-    console.log('test', position);
+async function requestLocationPermission() {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'Permission d\'accès à la localisation',
+        message:
+          'L\'application a besoin d\'accéder à votre localisation.',
+        buttonNeutral: 'Plus tard',
+        buttonNegative: 'Annuler',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('Permission d\'accès à la localisation accordée');
+      Geolocation.getCurrentPosition(
+        position => {
+          console.log('test', position);
 
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`)
-      .then(response => response.json())
-      .then(data => {
-        console.log('ma ville', data.address.city);
-      });
-  },
-  error => {
-    console.log(error);
-  },
-  {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-);
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`)
+            .then(response => response.json())
+            .then(data => {
+              console.log('ma ville', data.address.city);
+            });
+        },
+        error => {
+          console.log(error);
+        },
+        {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+      );
+    } else {
+      console.log('Permission d\'accès à la localisation refusée');
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+}
 
+requestLocationPermission();
 
 
 const Weather = ({ city = 'Paris,FR' }) => {
@@ -68,11 +93,7 @@ const Weather = ({ city = 'Paris,FR' }) => {
                         +
                     </StyledText2>
                     <StyledText>{name} ({sys.country})</StyledText>
-                    <StyledText2
-                        // onPress={() => navigation.navigate('Menu')}
-                    >
-                        :
-                    </StyledText2>
+                    <MenuButton />
                 </StyledView2>
                 <StyledView>
                     <StyledText2>{main.temp}°C</StyledText2>
@@ -105,10 +126,9 @@ const Weather = ({ city = 'Paris,FR' }) => {
                         <StyledText>{wind.speed} km/h</StyledText>
                     </StyledView4>
                 </StyledView3>
-                <StyledButton
-                    title="Voir les prévisions sur 5 jours"
-                    onPress={() => navigation.navigate('Retour')}
-                />
+                <Button onPress={() => navigation.navigate('Retour')}>
+                  <StyledTextb>Voir les prévisions sur 5 jours</StyledTextb>
+                </Button>
             </StyledScrollView>
         </BackgroundImage>
     </View>
@@ -142,10 +162,10 @@ const StyledScrollView= styled.ScrollView`
 `;
 
 const StyledView3= styled.View`
-  margin: 30px 5px;
+  margin: 30px 7px;
   background-color: rgba(135, 206, 235, 0.5);
   padding: 10px 20px;
-  border-radius: 25px;
+  border-radius: 20px;
 `;
 
 const StyledView2= styled.View`
@@ -164,12 +184,19 @@ const StyledImage = styled.Image`
     height: 100px;
 `;
 
-const StyledButton = styled.Button`
-  width: 100px;
-  background-color: red;
-  font-size: 50px;
-  border: solid red 3px;
-  margin: 0px 20px;
+const StyledTextb = styled.Text`
+    font-size: 23px;
+    font-weight: 700;
+    align-self: center;
+    padding: 9px 10px;
+    color: antiquewhite;
+`;
+
+const Button = styled.TouchableOpacity`
+  position: relative;
+  background-color: blue;
+  border-radius: 20px;
+  margin: 0px 7px;
 `;
 
  export default Weather;

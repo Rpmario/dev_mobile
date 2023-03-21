@@ -26,7 +26,7 @@ const Previsions = ({ city = 'Paris,FR' }) => {
     return <StyledText>Loading weather data...</StyledText>;
   }
 
-  const daysOfWeek = ["Aujourd'hui", 'Demain', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim', 'Lun'];
+  const daysOfWeek = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
   const { name, wind, humidity, pressure } = weatherData;
 
   const filteredForecastData = forecastData.list.filter(item => {
