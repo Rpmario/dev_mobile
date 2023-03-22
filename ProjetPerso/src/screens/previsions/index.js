@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components/native';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { ImageBackground } from 'react-native';
+import Header from '../../components/header';
+import { useNavigation } from '@react-navigation/native';
 
-const Previsions = ({ city = 'Paris,FR' }) => {
+const Previsions = ({ city = 'Paris' }) => {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     const apiKey = '1ce839b740d507e20f1a1c61d62e3d64';
@@ -22,11 +26,21 @@ const Previsions = ({ city = 'Paris,FR' }) => {
     }).catch(err => console.log(err));
   }, [city]);
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: '',
+      headerShown: true,
+    });
+  }, []);
+
   if (!weatherData || !forecastData) {
-    return <StyledText>Loading weather data...</StyledText>;
+    return <StyledViewf>
+            <ActivityIndicator size="large" color="blue" />
+            <StyledText>Loading weather data...</StyledText>
+           </StyledViewf>;
   }
 
-  const daysOfWeek = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  const daysOfWeek = ['Sam', 'Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven'];
   const { name, wind, humidity, pressure } = weatherData;
 
   const filteredForecastData = forecastData.list.filter(item => {
@@ -46,6 +60,7 @@ const Previsions = ({ city = 'Paris,FR' }) => {
 
   return (
     <View>
+      <Header title='Pévisions sur 5 jours' />
       <BackgroundImage source={{ uri: 'https://tse1.mm.bing.net/th?id=OIP.OmcD3mCgpi5qQMskIRAbhQHaE7&pid=Api&P=0' }}>
         <StyledTitle>{name}</StyledTitle>
         <ScrollView  horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -67,6 +82,11 @@ const Previsions = ({ city = 'Paris,FR' }) => {
     </View>
   );
 };
+
+const StyledViewf = styled.View`
+  align-items: center;
+  margin-top: 300px;
+`;
 
 const BackgroundImage = styled(ImageBackground)`
   width: 100%;

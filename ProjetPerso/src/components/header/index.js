@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import styled from 'styled-components';
 
   
-const Header = () => {
+const Header = props => {
   
   return (  
     <View style={
@@ -11,7 +11,7 @@ const Header = () => {
         backgroundColor:'blue'
       }
     }>
-      <StyledText>MétéRio</StyledText>
+      <StyledText>{props.title}</StyledText>
     </View>
   );
 };

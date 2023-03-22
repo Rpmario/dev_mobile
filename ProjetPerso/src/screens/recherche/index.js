@@ -4,10 +4,12 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
 import { ImageBackground } from 'react-native';
+import AddCityButton from '../../components/boutton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Recherche = () => {
   const navigation = useNavigation();
-  const [city, setCity] = useState('Paris,FR');
+  const [city, setCity] = useState('Paris');
   const [weatherData, setWeatherData] = useState(null);
 
   const apiKey = '1ce839b740d507e20f1a1c61d62e3d64';
@@ -40,6 +42,24 @@ const Recherche = () => {
     );
   }
 
+  const addFavorite = async () => {
+    try {
+      const cities = await AsyncStorage.getItem('cities');
+      let parsedCities = [];
+      if (cities) {
+        parsedCities = JSON.parse(cities);
+      }
+      if (!parsedCities.includes(city)) {
+        parsedCities.push(city);
+        console.log(parsedCities);
+        await AsyncStorage.setItem('cities', JSON.stringify(parsedCities));
+      }
+      setCity('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const { name, weather, main, sys, wind} = weatherData;
   const { description, icon } = weather[0];
   const { feels_like, humidity, pressure } = main;
@@ -54,6 +74,7 @@ const Recherche = () => {
             />
         </View>
         <StyledScrollView>
+            <AddCityButton handlePress={addFavorite}/>
             <StyledView>
                 <StyledText1>{name} ({sys.country})</StyledText1>
                 <StyledText2>{main.temp}°C</StyledText2>
@@ -142,7 +163,7 @@ const StyledScrollView= styled.ScrollView`
 `;
 
 const StyledView3= styled.View`
-  margin: 70px 5px 30px 0px;
+  margin: 50px 7px 30px 7px;
   background-color: rgba(135, 206, 235, 0.5);
   padding: 10px 20px;
   border-radius: 25px;

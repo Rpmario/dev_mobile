@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-import Header from '../header';
-import MenuButton from '../menu';
+import Header from '../../components/header';
+import MenuButton from '../../components/menu';
 import styled from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
 import { ImageBackground } from 'react-native';
@@ -50,11 +50,21 @@ async function requestLocationPermission() {
 requestLocationPermission();
 
 
-const Weather = ({ city = 'Paris,FR' }) => {
+const Weather = ({route}) => {
   const navigation = useNavigation();
   const [weatherData, setWeatherData] = useState(null);
 
+  if (route.params?.city) {
+    var city = route.params?.city;
+  } else {
+    var city = "Paris";
+  }
   useEffect(() => {
+
+  requestLocationPermission();
+
+  
+
     const apiKey = '1ce839b740d507e20f1a1c61d62e3d64';
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${apiKey}&units=metric`;
     axios({
@@ -74,7 +84,10 @@ const Weather = ({ city = 'Paris,FR' }) => {
   }, []);
 
   if (!weatherData) {
-    return <Text>Loading weather data...</Text>;
+    return <StyledViewf>
+            <ActivityIndicator size="large" color="blue" />
+            <StyledText>Loading weather data...</StyledText>
+          </StyledViewf>;
   }
 
   const { name, weather, main, sys, wind} = weatherData;
@@ -83,12 +96,12 @@ const Weather = ({ city = 'Paris,FR' }) => {
 
   return (
     <View>
-        <Header />
+        <Header title='MétéRio' />
         <BackgroundImage source={{ uri: 'https://tse3.explicit.bing.net/th?id=OIP.Me0fvmoRD9Xzq4nqf346RQHaE7&pid=Api&P=0' }}>
             <StyledScrollView>
                 <StyledView2>
                     <StyledText2
-                        onPress={() => navigation.navigate('Re')}
+                        onPress={() => navigation.navigate('Recherche')}
                     >
                         +
                     </StyledText2>
@@ -134,6 +147,11 @@ const Weather = ({ city = 'Paris,FR' }) => {
     </View>
   );
 };
+
+const StyledViewf = styled.View`
+  align-items: center;
+  margin-top: 300px;
+`;
 
 const BackgroundImage = styled(ImageBackground)`
   width: 100%;

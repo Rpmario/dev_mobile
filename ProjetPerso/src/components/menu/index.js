@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
 
 const MenuButton = () => {
+  const navigation = useNavigation();
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
@@ -16,10 +17,10 @@ const MenuButton = () => {
       </Button>
       {showMenu && (
         <Menu>
-          <MenuItem onPress={() => console.log('Favoris pressed')}>
+          <MenuItem onPress={() => navigation.navigate('Favoris')}>
             <Image source={require('../../images/favori.png')}/>
           </MenuItem>
-          <MenuItem onPress={() => navigation.navigate('Re')}>
+          <MenuItem onPress={() => console.log('Share pressed')}>
           <Image source={require('../../images/partager.png')}/>
           </MenuItem>
         </Menu>
