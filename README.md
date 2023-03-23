@@ -4,6 +4,9 @@ Nom et Prénoms: MBABOU Romario Ulrich
 
 Environnement: Androïde
 
+Lien de la vidéo de présentation de l'application:
+https://youtu.be/ZVx8dBqnNEw
+
 Fonctionnalités développées:
 - Affichage de la Météo du jour d'une ville (Paris par défaut);
 - Possibilité de voir les prévisions météorologiques sur 5 jours;
